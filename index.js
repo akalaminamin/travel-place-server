@@ -54,6 +54,26 @@ async function run() {
     app.post("/placeOrder", async (req, res) => {
       const cursor = req.body;
       const result = await placeOrderCollection.insertOne(cursor);
+      console.log(result);
+      res.json(result);
+    });
+
+    // update post status
+    app.put("/myOrder/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const status = req.body;
+      const options = { upsert: true };
+      const updateStatus = {
+        $set: {
+          status: "Approved",
+        },
+      };
+      const result = await placeOrderCollection.updateOne(
+        query,
+        updateStatus,
+        options
+      );
       res.json(result);
     });
 
